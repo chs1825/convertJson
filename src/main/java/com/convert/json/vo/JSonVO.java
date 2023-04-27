@@ -1,4 +1,4 @@
-package com.json.convert.vo;
+package com.convert.json.vo;
 
 
 import java.util.List;
