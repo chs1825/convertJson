@@ -64,10 +64,10 @@
                 let infoDiv = document.querySelector('#infoDiv');
                 infoDiv.innerHTML = `
                   <p>파일 경로: ${info.path}</p>
-                  <p>총 데이터 수: ${info.dataSize}개</p>
-                  <p>utterence가 1개인 데이터 수: ${info.utterenceNum}개</p>
-                  <p>Enter 없고 utterence가 1개인 데이터 수: ${info.noEnterUtterenceNum}개</p>
-                  <p>Enter 없고 utterence가 1개인 데이터 아이디 목록: ${info.noEnterUtterenceNumId}</p>
+                  <p>총 데이터 수: ${info.dataSize}건</p>
+                  <p>utterence가 1건인 데이터 수: ${info.utterenceNum}건</p>
+                  <p>개행없는 utterence가 1건인 데이터 수: ${info.noEnterUtterenceNum}건</p>
+                  <p>개행없는 utterence가 1건인 데이터 아이디 목록: ${info.noEnterUtterenceNumId}</p>
 
                 `;
 

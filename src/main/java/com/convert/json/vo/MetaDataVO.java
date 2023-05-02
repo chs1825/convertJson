@@ -1,76 +1,47 @@
 package com.convert.json.vo;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString
 public class MetaDataVO {
+
 
     private String date;
 
-    private String organ_name;
+    //기관명1
+    private String organ_name1;
 
-    private String organ_class;
+    //기관명2
+    private String organ_name2;
+
+    //번호
+    private String organ_num;
+
+    //부서명
+    private String organ_part;
+
+    //링크주소
+    private String link;
+
+    //엑셀자료에 있는 어절수
+    private String original_word_cnt;
+
+    //보도자료 문서명1
+    private String press_name;
+
+    private String note;
+
+//    private String organ_class;
 
     private String title;
 
-    private String charge;
+//    private String charge;
 
+    //직접 카운트한 어절수
     private String word_cnt;
 
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getOrgan_name() {
-        return organ_name;
-    }
-
-    public void setOrgan_name(String organ_name) {
-        this.organ_name = organ_name;
-    }
-
-    public String getOrgan_class() {
-        return organ_class;
-    }
-
-    public void setOrgan_class(String organ_class) {
-        this.organ_class = organ_class;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getCharge() {
-        return charge;
-    }
-
-    public void setCharge(String charge) {
-        this.charge = charge;
-    }
-
-    public String getWord_cnt() {
-        return word_cnt;
-    }
-
-    public void setWord_cnt(String word_cnt) {
-        this.word_cnt = word_cnt;
-    }
-
-    @Override
-    public String toString() {
-        return "MetaDataVO{" +
-                "date='" + date + '\'' +
-                ", organ_name='" + organ_name + '\'' +
-                ", organ_class='" + organ_class + '\'' +
-                ", title='" + title + '\'' +
-                ", charge='" + charge + '\'' +
-                ", word_cnt='" + word_cnt + '\'' +
-                '}';
-    }
 }
