@@ -170,7 +170,7 @@ public class JsonServiceImpl implements JsonService {
             UtteranceVO utteranceVO = new UtteranceVO();
 
             utteranceVO.setId(String.valueOf(cnt));
-            utteranceVO.setForm(item);
+            utteranceVO.setForm(item.trim());
             resList.add(utteranceVO);
             cnt++;
         }
