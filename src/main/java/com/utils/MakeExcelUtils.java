@@ -208,7 +208,7 @@ public class MakeExcelUtils {
             cell9.setCellValue(excelVO.getAnnotCnt());
 
 
-            // 보도자료 어절 개수
+            // 보도자료 어절 개수절
             XSSFCell cell10 = row.createCell(cellNum++);
             cell10.setCellValue(excelVO.getWordCnt());
 

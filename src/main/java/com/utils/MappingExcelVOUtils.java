@@ -86,15 +86,8 @@ public class MappingExcelVOUtils {
 //            int utteranceId = Integer.parseInt(utteranceJsonNode.path("id").asText());
                 int utteranceId = utteranceJsonNode.path("id").asInt();
 
+                if(annotCorrectJsonNode.size() == 0 ){
 
-                //utterance에 해당하는게 있는지 검사 해서 없으면 continue;
-                if (!presentIdList.contains(utteranceId)) {
-                    continue;
-                }
-
-                Map<String, AnnotCorrectVO> annotCorrectVOMap = makeAnnotCorrectVOMap(utteranceId, annotCorrectJsonNode, jsonType);
-
-                for (String key : annotCorrectVOMap.keySet()) {
                     ExcelVO finalExcelVO = new ExcelVO();
 
                     //아이디 정보
@@ -108,43 +101,72 @@ public class MappingExcelVOUtils {
                     finalExcelVO.setPressTitle(title);
 
                     //annotInfos.accuracyInfo  정보 만들기
-                    finalExcelVO.setWordCnt(wordCnt);
+                    finalExcelVO.setWordCnt(0);
                     finalExcelVO.setAnnotCnt(annotCnt);
                     finalExcelVO.setErrorForA4(errorForA4);
-                    //의견란만들기
-                    finalExcelVO.setErrorCase(utteranceJsonNode.path("annot_form").asText());
-
-                    //annotCorrect 전체 만들어주기
-                    log.debug("최종 key : {}", key);
-                    AnnotCorrectVO annotCorrectVO = annotCorrectVOMap.get(key);
-
-                    // errorCaseType
-                    String errorCaseType = annotCorrectVO.getErrorCaseType();
-                    finalExcelVO.setErrorCaseType(errorCaseType);
-
-                    // memo
-                    String memo = annotCorrectVO.getMemo();
-                    finalExcelVO.setMemo(memo);
-
-                    // detailType
-                    String detailType = annotCorrectVO.getDetailType();
-                    finalExcelVO.setDetailType(detailType);
-
-                    // inspectNote
-                    String inspectNote = annotCorrectVO.getInspectNote();
-                    finalExcelVO.setInspectNote(inspectNote);
-
-                    //markType
-                    String markType = annotCorrectVO.getMarkType();
-                    finalExcelVO.setMarkType(markType);
-
-                    //underline
-                    log.debug("여기가 문제인가? : {}", annotCorrectVO.getUnderLineIndexList());
-                    finalExcelVO.setUnderLineInfo(annotCorrectVO.getUnderLineIndexList());
-                    log.debug("여기가 문제인가 vo 확인 : {}", finalExcelVO);
 
 
                     resList.add(finalExcelVO);
+                }else{
+                    //utterance에 해당하는게 있는지 검사 해서 없으면 continue;
+                    if (!presentIdList.contains(utteranceId)) {
+                        continue;
+                    }
+
+                    Map<String, AnnotCorrectVO> annotCorrectVOMap = makeAnnotCorrectVOMap(utteranceId, annotCorrectJsonNode, jsonType);
+
+                    for (String key : annotCorrectVOMap.keySet()) {
+                        ExcelVO finalExcelVO = new ExcelVO();
+
+                        //아이디 정보
+                        finalExcelVO.setId(id);
+
+                        //metaData 정보 만들기
+                        finalExcelVO.setDocumentNumber(organ_name1 + "-" + organ_name2 + "-" + organ_num);
+                        finalExcelVO.setOrganizationName(organ_name1 + "-" + organ_name2);
+                        finalExcelVO.setDate(date);
+
+                        finalExcelVO.setPressTitle(title);
+
+                        //annotInfos.accuracyInfo  정보 만들기
+                        finalExcelVO.setWordCnt(wordCnt);
+                        finalExcelVO.setAnnotCnt(annotCnt);
+                        finalExcelVO.setErrorForA4(errorForA4);
+                        //의견란만들기
+                        finalExcelVO.setErrorCase(utteranceJsonNode.path("annot_form").asText());
+
+                        //annotCorrect 전체 만들어주기
+                        log.debug("최종 key : {}", key);
+                        AnnotCorrectVO annotCorrectVO = annotCorrectVOMap.get(key);
+
+                        // errorCaseType
+                        String errorCaseType = annotCorrectVO.getErrorCaseType();
+                        finalExcelVO.setErrorCaseType(errorCaseType);
+
+                        // memo
+                        String memo = annotCorrectVO.getMemo();
+                        finalExcelVO.setMemo(memo);
+
+                        // detailType
+                        String detailType = annotCorrectVO.getDetailType();
+                        finalExcelVO.setDetailType(detailType);
+
+                        // inspectNote
+                        String inspectNote = annotCorrectVO.getInspectNote();
+                        finalExcelVO.setInspectNote(inspectNote);
+
+                        //markType
+                        String markType = annotCorrectVO.getMarkType();
+                        finalExcelVO.setMarkType(markType);
+
+                        //underline
+                        log.debug("여기가 문제인가? : {}", annotCorrectVO.getUnderLineIndexList());
+                        finalExcelVO.setUnderLineInfo(annotCorrectVO.getUnderLineIndexList());
+                        log.debug("여기가 문제인가 vo 확인 : {}", finalExcelVO);
+
+
+                        resList.add(finalExcelVO);
+                    }
                 }
             }
         }
@@ -221,7 +243,7 @@ public class MappingExcelVOUtils {
                     finalExcelVO.setPressTitle(title);
 
                     //annotInfos.accuracyInfo  정보 만들기
-                    finalExcelVO.setWordCnt(wordCnt);
+                    finalExcelVO.setWordCnt(0);
                     finalExcelVO.setAnnotCnt(annotCnt);
                     finalExcelVO.setErrorForA4(errorForA4);
 
