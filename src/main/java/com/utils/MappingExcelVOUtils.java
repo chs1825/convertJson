@@ -18,7 +18,7 @@ public class MappingExcelVOUtils {
     public List<ExcelVO> mappingJsonToObject(String jsonContent, String jsonType) throws IOException {
 
         List<ExcelVO> resList = new ArrayList<>();
-
+        int cntForOriginUtteracne =0;
         //전체 제이슨 노드 생성
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(jsonContent);
@@ -27,6 +27,7 @@ public class MappingExcelVOUtils {
 
         if (jsonNode.isArray()) {
             log.debug("리스트입니다.");
+
             return makeExcelVOList(jsonNode, resList, jsonType);
         } else {
             log.debug("리스트가 아닙니다.");
@@ -49,6 +50,7 @@ public class MappingExcelVOUtils {
 
 
             String title = metaDataJsonNode.path("title").asText();
+            String originalUtterance = metaDataJsonNode.path("original_utterance").asText();
 
             //annotInfos.accuracyInfo 노드
             JsonNode annotInfosJsonNode = null;
@@ -70,7 +72,6 @@ public class MappingExcelVOUtils {
             JsonNode annotCorrectJsonNode = jsonNode.get("annotCorrect");
 
 
-
             //utterance id 주머니
             Set<Integer> presentIdList = new HashSet<>();
             for (int i = 0; i < annotCorrectJsonNode.size(); i++) {
@@ -81,15 +82,11 @@ public class MappingExcelVOUtils {
 
             //본격적인 vo 만들기
             for (int i = 0; i < jsonNode.get("utterance").size(); i++) {
-
                 JsonNode utteranceJsonNode = jsonNode.get("utterance").get(i);
-//            int utteranceId = Integer.parseInt(utteranceJsonNode.path("id").asText());
                 int utteranceId = utteranceJsonNode.path("id").asInt();
 
-                if(annotCorrectJsonNode.size() == 0 ){
-
+                if(annotCorrectJsonNode.size() == 0 ){ //annotCorrectJsonNode가 빈 배열일때
                     ExcelVO finalExcelVO = new ExcelVO();
-
                     //아이디 정보
                     finalExcelVO.setId(id);
 
@@ -101,12 +98,15 @@ public class MappingExcelVOUtils {
                     finalExcelVO.setPressTitle(title);
 
                     //annotInfos.accuracyInfo  정보 만들기
-                    finalExcelVO.setWordCnt(0);
+                    finalExcelVO.setWordCnt(wordCnt);
                     finalExcelVO.setAnnotCnt(annotCnt);
                     finalExcelVO.setErrorForA4(errorForA4);
 
+//                    원문추가
+                    finalExcelVO.setOriginal_utterance(originalUtterance);
 
                     resList.add(finalExcelVO);
+                    break;
                 }else{
                     //utterance에 해당하는게 있는지 검사 해서 없으면 continue;
                     if (!presentIdList.contains(utteranceId)) {
@@ -117,7 +117,6 @@ public class MappingExcelVOUtils {
 
                     for (String key : annotCorrectVOMap.keySet()) {
                         ExcelVO finalExcelVO = new ExcelVO();
-
                         //아이디 정보
                         finalExcelVO.setId(id);
 
@@ -134,6 +133,13 @@ public class MappingExcelVOUtils {
                         finalExcelVO.setErrorForA4(errorForA4);
                         //의견란만들기
                         finalExcelVO.setErrorCase(utteranceJsonNode.path("annot_form").asText());
+
+                        //원문 추가
+                        if(cntForOriginUtteracne ==0){
+                            finalExcelVO.setOriginal_utterance(originalUtterance);
+                            cntForOriginUtteracne ++;
+
+                        }
 
                         //annotCorrect 전체 만들어주기
                         log.debug("최종 key : {}", key);
@@ -159,6 +165,10 @@ public class MappingExcelVOUtils {
                         String markType = annotCorrectVO.getMarkType();
                         finalExcelVO.setMarkType(markType);
 
+                        //text 지적용어
+                        String text = annotCorrectVO.getText();
+                        finalExcelVO.setText(text);
+
                         //underline
                         log.debug("여기가 문제인가? : {}", annotCorrectVO.getUnderLineIndexList());
                         finalExcelVO.setUnderLineInfo(annotCorrectVO.getUnderLineIndexList());
@@ -179,6 +189,7 @@ public class MappingExcelVOUtils {
     private List<ExcelVO> makeExcelVOList(JsonNode BigJsonNode, List<ExcelVO> resList, String jsonType) {
 
         for (int j = 0; j < BigJsonNode.size(); j++) {
+            int cntForOriginUtteracne = 0;
             JsonNode jsonNode = BigJsonNode.get(j);
 
             JsonNode idJasoonNode = jsonNode.get("id");
@@ -199,6 +210,7 @@ public class MappingExcelVOUtils {
 
 
             String title = metaDataJsonNode.path("title").asText();
+            String originalUtterance = metaDataJsonNode.path("original_utterance").asText();
 
             JsonNode annotInfosJsonNode = null;
 
@@ -222,14 +234,13 @@ public class MappingExcelVOUtils {
                 presentIdList.add((annotCorrectJsonNode.get(i).path("utteranceId").asInt()));
             }
 
-            //본격적인 vo 만들기
+//본격적인 vo 만들기
             for (int i = 0; i < jsonNode.get("utterance").size(); i++) {
 
                 JsonNode utteranceJsonNode = jsonNode.get("utterance").get(i);
                 int utteranceId = utteranceJsonNode.path("id").asInt();
 
-                if(annotCorrectJsonNode.size() == 0 ){  //annotCorrectJsonNode가 빈 배열일때
-
+                if(annotCorrectJsonNode.size() == 0 ){
                     ExcelVO finalExcelVO = new ExcelVO();
 
                     //아이디 정보
@@ -243,14 +254,16 @@ public class MappingExcelVOUtils {
                     finalExcelVO.setPressTitle(title);
 
                     //annotInfos.accuracyInfo  정보 만들기
-                    finalExcelVO.setWordCnt(0);
+                    finalExcelVO.setWordCnt(wordCnt);
                     finalExcelVO.setAnnotCnt(annotCnt);
                     finalExcelVO.setErrorForA4(errorForA4);
 
+                    //원문추가
+                    finalExcelVO.setOriginal_utterance(originalUtterance);
 
                     resList.add(finalExcelVO);
-
-                }else {
+                    break;
+                }else{
                     //utterance에 해당하는게 있는지 검사 해서 없으면 continue;
                     if (!presentIdList.contains(utteranceId)) {
                         continue;
@@ -259,9 +272,7 @@ public class MappingExcelVOUtils {
                     Map<String, AnnotCorrectVO> annotCorrectVOMap = makeAnnotCorrectVOMap(utteranceId, annotCorrectJsonNode, jsonType);
 
                     for (String key : annotCorrectVOMap.keySet()) {
-
                         ExcelVO finalExcelVO = new ExcelVO();
-
                         //아이디 정보
                         finalExcelVO.setId(id);
 
@@ -273,13 +284,23 @@ public class MappingExcelVOUtils {
                         finalExcelVO.setPressTitle(title);
 
                         //annotInfos.accuracyInfo  정보 만들기
-                        finalExcelVO.setWordCnt(wordCnt);
-                        finalExcelVO.setAnnotCnt(annotCnt);
-                        finalExcelVO.setErrorForA4(errorForA4);
-
-
+//                        finalExcelVO.setWordCnt(wordCnt);
+//                        finalExcelVO.setAnnotCnt(annotCnt);
+//                        finalExcelVO.setErrorForA4(errorForA4);
                         //의견란만들기
                         finalExcelVO.setErrorCase(utteranceJsonNode.path("annot_form").asText());
+
+                        //원문 추가
+                        if(cntForOriginUtteracne ==0){
+                            finalExcelVO.setOriginal_utterance(originalUtterance);
+                            //annotInfos.accuracyInfo  정보 만들기
+                            finalExcelVO.setWordCnt(wordCnt);
+                            finalExcelVO.setAnnotCnt(annotCnt);
+                            finalExcelVO.setErrorForA4(errorForA4);
+                            cntForOriginUtteracne ++;
+
+                        }
+
 
                         //annotCorrect 전체 만들어주기
                         log.debug("최종 key : {}", key);
@@ -366,7 +387,7 @@ public class MappingExcelVOUtils {
             }//if문 종료
 
         }//for문 종료
-        if(jsonType.equals("simplicity")){
+        if(jsonType.equals("simplicity")){ //용이성 파일이면 여기서 스탑
 
             return annotCorrectInfoMap;
         }
@@ -408,7 +429,6 @@ public class MappingExcelVOUtils {
             annotCorrectInfoMap.put(groupId, annotCorrectVO);
 
         }
-
 
         return annotCorrectInfoMap;
     }

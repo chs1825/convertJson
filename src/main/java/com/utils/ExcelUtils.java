@@ -98,9 +98,12 @@ public class ExcelUtils {
             Cell cell = row.getCell(i,Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
 
             String value = "";
+            DecimalFormat decimalFormat = new DecimalFormat("#");
             switch (cell.getCellType()) {
                 case FORMULA:
-                    value = cell.getCellFormula();
+//                    value = cell.getCellFormula();
+//                    value = String.valueOf(cell.getNumericCellValue());
+                    value = decimalFormat.format(cell.getNumericCellValue());
                     break;
                 case NUMERIC:
                     // 날짜 값이면, SimpleDateFormat을 사용하여 문자열로 변환합니다.

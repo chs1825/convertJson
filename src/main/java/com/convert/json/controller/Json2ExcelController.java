@@ -22,12 +22,11 @@ public class Json2ExcelController {
     public String goJson2Excel(Model model) throws IOException, ParseException {
 
 
-        String path = "/Users/chs/jsonToExcel 프로그램 개발/용이성 평가/export_simplicity_0523_01.json";
-        String chk = "simplicity";
-//
-//        String path = "/Users/chs/jsonToExcel 프로그램 개발/정확성평가/test2.json";
-//        String path = "/Users/chs/jsonToExcel 프로그램 개발/정확성평가/export_acurracy_sorted.json";
-//        String chk = "accuracy";
+//        String path = "/Users/chs/jsonToExcel 프로그램 개발/용이성 평가/export_simplicity_amended.json";
+//        String chk = "simplicity";
+
+        String path = "/Users/chs/jsonToExcel 프로그램 개발/정확성평가/export_acurracy_amended.json";
+        String chk = "accuracy";
 
 
         ReadJsonFileUtils readJsonFileUtils = new ReadJsonFileUtils();

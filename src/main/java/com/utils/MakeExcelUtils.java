@@ -39,8 +39,8 @@ public class MakeExcelUtils {
 
         // 데이터 입력
         Object[][] column = {
-                {"표본명", "기관명+문서번호", "기관명", "보도자료 생산일자", "보도자료 제목", "잘못된 사례 분류 \n (어문규범/어법)", "잘못된 사례", "세부유형", "주석 메모",
-                        "잘못된 표현 \n 표기 개수", "보도자료 \n 어절 개수", "보도자료 1매 기준 잘못된 표현 개수", "연구진 검토 의견", "국어원 검토 요청"
+                {"표본명", "기관명+문서번호", "기관명", "보도자료 생산일자", "보도자료 제목", "잘못된 사례", "잘못된 사례 분류 \n (어문규범/어법)","세부유형", "주석 메모",
+                        "잘못된 표현 \n 표기 개수", "보도자료 \n 어절 개수", "보도자료 1매 기준 잘못된 표현 개수", "연구진 검토 의견", "국어원 검토 요청", "원문"
                 }
         };
 
@@ -106,20 +106,10 @@ public class MakeExcelUtils {
                 cell4.setCellValue(excelVO.getPressTitle());
             }
 
-            // 잘못된 사례 분류(어문규범/어법)
-            XSSFCell cell5 = row.createCell(cellNum++);
-            String errorCaseType = "";
-            if (excelVO.getErrorCaseType() != null) {
-                if (excelVO.getErrorCaseType().equals("grammar")) {
-                    errorCaseType = "어법";
-                } else {
-                    errorCaseType = "어문규범";
-                }
-            }
-            cell5.setCellValue(errorCaseType);
+
 
             // 잘못된 사례
-            XSSFCell cell6 = row.createCell(cellNum++);
+            XSSFCell cell5 = row.createCell(cellNum++);
             if (excelVO.getErrorCase() != null) {
                 String text = excelVO.getErrorCase();
                 XSSFRichTextString richTextString = new XSSFRichTextString(text);
@@ -132,70 +122,16 @@ public class MakeExcelUtils {
                         richTextString.applyFont(startIndex, endIndex, getFontWithUnderline(workbook));
                     }
                 }
-                cell6.setCellValue(richTextString);
+                cell5.setCellValue(richTextString);
             }
+
+            // 잘못된 사례 분류(어문규범/어법)
+            XSSFCell cell6 = row.createCell(cellNum++);
+            cell6.setCellValue(excelVO.getErrorCaseType());
 
             // 세부유형
             XSSFCell cell7 = row.createCell(cellNum++);
-            String detailType = "";
-
-            if (excelVO.getDetailType() != null) {
-
-                switch (excelVO.getDetailType()) {
-                    case "sv-response":
-                        detailType = "주어와 서술어의 호응 오류";
-                        break;
-                    case "ov-response":
-                        detailType = "목적어와 서술어의 호응 오류";
-                        break;
-                    case "adv-response":
-                        detailType = "부사어와 서술어의 호응 오류";
-                        break;
-                    case "connection":
-                        detailType = "문장 연결 오류";
-                        break;
-                    case "essential-component":
-                        detailType = "문장의 필수 성분 생략 오류";
-                        break;
-                    case "voca":
-                        detailType = "어휘 사용 오류";
-                        break;
-                    case "ambiguity":
-                        detailType = "중의성 오류";
-                        break;
-                    case "essencial-voca":
-                        detailType = "필수 어휘 누락 오류";
-                        break;
-                    case "improper":
-                        detailType = "부적절한 연결 어미 사용";
-                        break;
-                    case "conjuntion":
-                        detailType = "접속 오류";
-                        break;
-                    case "word-order":
-                        detailType = "어순 오류";
-                        break;
-                    case "etc":
-                        detailType = "기타";
-                        break;
-                    case "misprint":
-                        detailType = "오탈자";
-                        break;
-                    case "initial":
-                        detailType = "두음법칙 미준수";
-                        break;
-                    case "bracket":
-                        detailType = "괄호 뒤 조사 사용 오류";
-                        break;
-                    case "interpunct":
-                        detailType = "가운뎃 점 사용 오류";
-                        break;
-                    case "loanword":
-                        detailType = "외래어 표기법 미준수";
-                        break;
-                }
-            }
-            cell7.setCellValue(detailType);
+            cell7.setCellValue(excelVO.getDetailType());
 
             // 주석 메모
             XSSFCell cell8 = row.createCell(cellNum++);
@@ -203,23 +139,38 @@ public class MakeExcelUtils {
                 cell8.setCellValue(excelVO.getMemo());
             }
 
+
             // 잘못된 표현 표기 개수
             XSSFCell cell9 = row.createCell(cellNum++);
-            cell9.setCellValue(excelVO.getAnnotCnt());
+            if(excelVO.getAnnotCnt() != 0 || excelVO.getWordCnt() != 0 || excelVO.getErrorForA4() != null){
+                cell9.setCellValue(excelVO.getAnnotCnt());
+            }
 
 
-            // 보도자료 어절 개수절
+            // 보도자료 어절 개수
             XSSFCell cell10 = row.createCell(cellNum++);
-            cell10.setCellValue(excelVO.getWordCnt());
+            if(excelVO.getAnnotCnt() != 0 || excelVO.getWordCnt() != 0 || excelVO.getErrorForA4() != null){
+                cell10.setCellValue(excelVO.getWordCnt());
+            }
 
-            // 보도자료 1매 기준 잘못된 표현 개수
+            // 보도 자료 1매 기준 어려운 표현 개수
             XSSFCell cell11 = row.createCell(cellNum++);
-            cell11.setCellValue(excelVO.getErrorForA4());
+            if(excelVO.getErrorForA4() != null && (excelVO.getAnnotCnt() != 0 || excelVO.getWordCnt() != 0 )){
+                cell11.setCellValue(excelVO.getErrorForA4());
+            }
+
 
             // 연구진 검토 의견
             XSSFCell cell12 = row.createCell(cellNum++);
             if (excelVO.getInspectNote() != null) {
                 cell12.setCellValue(excelVO.getInspectNote());
+            }
+
+
+            // 원문
+            XSSFCell cell15 = row.createCell(1+cellNum++);
+            if (excelVO.getOriginal_utterance() != null) {
+                cell15.setCellValue(excelVO.getOriginal_utterance());
             }
 
         }
@@ -291,7 +242,7 @@ public class MakeExcelUtils {
         Object[][] column = {
                 {"표본명", "기관명+문서번호", "기관명", "보도자료 생산일자", "보도자료 제목", "지적용어", "지적 용어 분류",
                         "어려운 표현 사용 문장", "주석메모", "어려운 표현 노출 개수", "보도자료 어절 개수", "보도자료 1매 기준 \n어려운 표현 개수",
-                        "연구진 검토 의견", "국어원 검토 요청"
+                        "연구진 검토 의견", "국어원 검토 요청", "원문"
                 }
         };
 
@@ -363,21 +314,21 @@ public class MakeExcelUtils {
 
             // 지적 용어 분류
             XSSFCell cell6 = row.createCell(cellNum++);
-            String markType = "";
-            if (excelVO.getMarkType() != null) {
-                switch (excelVO.getMarkType()) {
-                    case "language":
-                        markType = "외국어";
-                        break;
-                    case "letter":
-                        markType = "외국 글자";
-                        break;
-                    case "discussion":
-                        markType = "논의 대상";
-                        break;
-                }
-            }
-            cell6.setCellValue(markType);
+//            String markType = "";
+//            if (excelVO.getMarkType() != null) {
+//                switch (excelVO.getMarkType()) {
+//                    case "language":
+//                        markType = "외국어";
+//                        break;
+//                    case "letter":
+//                        markType = "외국 글자";
+//                        break;
+//                    case "discussion":
+//                        markType = "논의 대상";
+//                        break;
+//                }
+//            }
+            cell6.setCellValue(excelVO.getMarkType());
 
             // 어려운 표현 사용 문장
             XSSFCell cell7 = row.createCell(cellNum++);
@@ -403,23 +354,35 @@ public class MakeExcelUtils {
                 cell8.setCellValue(excelVO.getMemo());
             }
 
-            // 어려운 표현 노출 개수
+            // 보도자료 어려운 표현 노출 개수
             XSSFCell cell9 = row.createCell(cellNum++);
-            cell9.setCellValue(excelVO.getAnnotCnt());
+            if(excelVO.getAnnotCnt() != 0 || excelVO.getWordCnt() != 0 || excelVO.getErrorForA4() != null){
+                cell9.setCellValue(excelVO.getAnnotCnt());
+            }
+
 
             // 보도자료 어절 개수
             XSSFCell cell10 = row.createCell(cellNum++);
-            cell10.setCellValue(excelVO.getWordCnt());
-
+            if(excelVO.getAnnotCnt() != 0 || excelVO.getWordCnt() != 0 || excelVO.getErrorForA4() != null){
+                cell10.setCellValue(excelVO.getWordCnt());
+            }
 
             // 보도 자료 1매 기준 어려운 표현 개수
             XSSFCell cell11 = row.createCell(cellNum++);
-            cell11.setCellValue(excelVO.getErrorForA4());
+            if(excelVO.getErrorForA4() != null && (excelVO.getAnnotCnt() != 0 || excelVO.getWordCnt() != 0 )){
+                cell11.setCellValue(excelVO.getErrorForA4());
+            }
 
             //연구진 검토의견
             XSSFCell cell12 = row.createCell(cellNum++);
             if (excelVO.getInspectNote() != null) {
                 cell12.setCellValue(excelVO.getInspectNote());
+            }
+
+            //원문
+            XSSFCell cell14 = row.createCell(1+cellNum++);
+            if (excelVO.getOriginal_utterance() != null) {
+                cell14.setCellValue(excelVO.getOriginal_utterance());
             }
         }
 

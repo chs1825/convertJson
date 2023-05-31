@@ -78,7 +78,7 @@ public class JsonServiceImpl implements JsonService {
             metaDataVO.setLink(dataList.get(i).get("링크주소"));
             metaDataVO.setPress_name(dataList.get(i).get("보도자료 문서명1"));
             metaDataVO.setNote(dataList.get(i).get("비고"));
-
+            metaDataVO.setOriginal_utterance(text);
 
             //3. jsonVO 완성
             jSonVO.setMetaData(metaDataVO);
@@ -219,7 +219,7 @@ public class JsonServiceImpl implements JsonService {
             objectMapper.enable(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN);
 
             // .json 파일 생성
-            String filePath = "/Users/chs/excelToJson/jsonFolder/excel2json.json";
+            String filePath = "/Users/chs/excelToJson/jsonFolder/본문추가.json";
             File file = new File(filePath);
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             objectMapper.writeValue(fileOutputStream, dataList);

@@ -44,4 +44,6 @@ public class MetaDataVO {
     //직접 카운트한 어절수
     private String word_cnt;
 
+    private String original_utterance;
+
 }
